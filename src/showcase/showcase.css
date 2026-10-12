@@ -1,0 +1,44 @@
+/*
+  Shared bones for the three showcase pages. Each page scopes its own tokens
+  under its root class (.nl, .bp, .cl); nothing here sets a colour.
+*/
+
+/* Lenis owns scrolling on these pages; the site's CSS smooth scroll would fight it. */
+html:has(.showcase) {
+  scroll-behavior: auto;
+}
+
+.showcase {
+  min-height: 100dvh;
+  isolation: isolate;
+}
+
+.showcase .line-mask {
+  display: block;
+  overflow: hidden;
+  padding-bottom: 0.08em;
+  margin-bottom: -0.08em;
+}
+
+.showcase .line-inner {
+  display: block;
+  will-change: transform;
+}
+
+.showcase .wrap-x {
+  width: 100%;
+  max-width: 1280px;
+  margin-inline: auto;
+  padding-inline: clamp(1.25rem, 4vw, 3rem);
+}
+
+.showcase canvas {
+  display: block;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .showcase [data-rise] {
+    opacity: 1 !important;
+    transform: none !important;
+  }
+}

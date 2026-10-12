@@ -1,0 +1,488 @@
+/*
+  Clay — reference lock
+  Primary: Titan (canvas white with warm stone surfaces, Midnight Ink type,
+  bold tight display, black pill CTAs, 32px panel radius, 80px rhythm, no
+  shadows). Borrowed: Wealthsimple's sculptural 3D still life as the hero
+  media; Monzo's large cushion panels. Titan's Highlight Orange keeps its
+  role: a decorative stroke only, never a surface or a button. Rejected:
+  serif display, terracotta or olive accents, bordered cards, gradients.
+*/
+
+.cl {
+  --cl-bg: #ffffff;
+  --cl-stone: #f3efeb;
+  --cl-stone-2: #e9e3dc;
+  --cl-clay: #d9d1c7;
+  --cl-ink: #111111;
+  --cl-ink-2: #615e5b;
+  --cl-ink-3: #948f8a;
+  --cl-line: #d8d3cc;
+  --cl-thread: #ff9900;
+
+  --cl-ease: cubic-bezier(0.2, 0, 0, 1);
+  --cl-radius: 32px;
+
+  background: var(--cl-bg);
+  color: var(--cl-ink);
+  font-family: var(--cl-sans), ui-sans-serif, system-ui, sans-serif;
+  letter-spacing: -0.006em;
+}
+
+.cl ::selection {
+  background: var(--cl-ink);
+  color: var(--cl-stone);
+}
+
+.cl :focus-visible {
+  outline: 2px solid var(--cl-ink);
+  outline-offset: 3px;
+}
+
+.cl .display-face {
+  font-family: var(--cl-display), ui-sans-serif, system-ui, sans-serif;
+  font-weight: 700;
+  font-variation-settings: "opsz" 96, "wdth" 92;
+  letter-spacing: -0.035em;
+}
+
+.cl .mono {
+  font-family: var(--cl-mono), ui-monospace, monospace;
+  font-variant-numeric: tabular-nums;
+}
+
+.cl .label {
+  font-family: var(--cl-mono), ui-monospace, monospace;
+  font-size: 0.6875rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--cl-ink-3);
+}
+
+.cl .display {
+  font-size: clamp(3rem, 7.6vw, 6.75rem);
+  line-height: 0.96;
+  text-wrap: balance;
+}
+
+.cl .h2 {
+  font-size: clamp(2.125rem, 4.4vw, 3.75rem);
+  line-height: 1;
+  text-wrap: balance;
+}
+
+.cl .h3 {
+  font-size: clamp(1.375rem, 2vw, 1.75rem);
+  line-height: 1.12;
+  letter-spacing: -0.025em;
+}
+
+.cl .lede {
+  font-size: clamp(1.0625rem, 1.35vw, 1.25rem);
+  line-height: 1.5;
+  color: var(--cl-ink-2);
+  text-wrap: pretty;
+}
+
+.cl .muted {
+  color: var(--cl-ink-2);
+}
+
+.cl .faint {
+  color: var(--cl-ink-3);
+}
+
+/* ─── cushion panels ─── */
+.cl-cushion {
+  background: var(--cl-stone);
+  border-radius: var(--cl-radius);
+}
+
+.cl-cushion--deep {
+  background: var(--cl-stone-2);
+}
+
+.cl-cushion--ink {
+  background: var(--cl-ink);
+  color: #fff;
+}
+
+.cl-cushion--ink .label,
+.cl-cushion--ink .faint {
+  color: rgb(255 255 255 / 0.55);
+}
+
+.cl-cushion--ink .muted {
+  color: rgb(255 255 255 / 0.75);
+}
+
+/* ─── nav ─── */
+.cl-nav {
+  position: fixed;
+  top: 1rem;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 40;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.4rem 0.5rem 0.4rem 1rem;
+  border-radius: 999px;
+  background: rgb(243 239 235 / 0.86);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  width: calc(100% - 2.5rem);
+  max-width: 54rem;
+}
+
+.cl-nav nav {
+  display: none;
+  gap: 0.25rem;
+  margin-inline: auto;
+}
+
+@media (min-width: 768px) {
+  .cl-nav nav {
+    display: flex;
+  }
+}
+
+.cl-nav nav a {
+  display: inline-flex;
+  align-items: center;
+  height: 2.5rem;
+  padding-inline: 0.9rem;
+  border-radius: 999px;
+  font-size: 0.9375rem;
+  color: var(--cl-ink-2);
+  transition: background-color 150ms var(--cl-ease), color 150ms var(--cl-ease);
+}
+
+.cl-nav nav a:hover {
+  background: #fff;
+  color: var(--cl-ink);
+}
+
+/* ─── buttons ─── */
+.cl-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  height: 3.25rem;
+  padding-inline: 1.6rem;
+  border-radius: 999px;
+  background: var(--cl-ink);
+  color: #fff;
+  font-weight: 500;
+  font-size: 0.9375rem;
+  white-space: nowrap;
+  transition: transform 150ms var(--cl-ease), background-color 150ms var(--cl-ease);
+}
+
+.cl-btn:hover {
+  background: #000;
+}
+
+.cl-btn:active {
+  transform: scale(0.97);
+}
+
+.cl-btn .arrow {
+  transition: transform 200ms var(--cl-ease);
+}
+
+.cl-btn:hover .arrow {
+  transform: translateX(3px);
+}
+
+.cl-btn--ghost {
+  background: #fff;
+  color: var(--cl-ink);
+  border: 1px solid var(--cl-line);
+}
+
+.cl-btn--ghost:hover {
+  background: #fff;
+  border-color: var(--cl-ink);
+}
+
+.cl-btn--sm {
+  height: 2.5rem;
+  padding-inline: 1.1rem;
+  font-size: 0.875rem;
+}
+
+/* ─── hero ─── */
+.cl-stage {
+  position: relative;
+  height: 220vh;
+  padding-inline: clamp(0.75rem, 2vw, 1.5rem);
+}
+
+.cl-sticky {
+  position: sticky;
+  top: clamp(0.75rem, 2vw, 1.5rem);
+  height: calc(100vh - clamp(1.5rem, 4vw, 3rem));
+  height: calc(100dvh - clamp(1.5rem, 4vw, 3rem));
+  overflow: hidden;
+  display: grid;
+  align-content: end;
+}
+
+.cl-scene {
+  position: absolute;
+  inset: 0;
+}
+
+.cl-hero {
+  position: relative;
+  z-index: 1;
+  padding: clamp(1.5rem, 4vw, 3.5rem);
+}
+
+@media (min-width: 1024px) {
+  .cl-scene {
+    left: 38%;
+  }
+}
+
+.cl-passed {
+  position: absolute;
+  z-index: 1;
+  right: clamp(1.5rem, 4vw, 3.5rem);
+  top: clamp(5.5rem, 10vh, 7rem);
+  text-align: right;
+}
+
+.cl-passed .n {
+  font-size: clamp(3rem, 6vw, 5rem);
+  line-height: 0.9;
+}
+
+/* ─── sections ─── */
+.cl-section {
+  padding-block: clamp(4rem, 8vw, 7rem);
+}
+
+/* desks: two cushions that lift a little */
+.cl-desk {
+  display: block;
+  padding: clamp(1.75rem, 3.5vw, 3rem);
+  transition: transform 300ms var(--cl-ease), background-color 300ms var(--cl-ease);
+}
+
+.cl-desk:hover {
+  transform: translateY(-4px);
+  background: var(--cl-stone-2);
+}
+
+.cl-desk .go {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 3rem;
+  height: 3rem;
+  border-radius: 999px;
+  background: #fff;
+  color: var(--cl-ink);
+  transition: background-color 200ms var(--cl-ease), color 200ms var(--cl-ease);
+}
+
+.cl-desk:hover .go {
+  background: var(--cl-ink);
+  color: #fff;
+}
+
+.cl-desk .go svg {
+  transition: transform 200ms var(--cl-ease);
+}
+
+.cl-desk:hover .go svg {
+  transform: translateX(2px);
+}
+
+/* the road as an accordion of stones */
+.cl-road {
+  border-top: 1px solid var(--cl-line);
+}
+
+.cl-road > li {
+  border-bottom: 1px solid var(--cl-line);
+}
+
+.cl-road button {
+  display: grid;
+  width: 100%;
+  grid-template-columns: 2.5rem 1fr auto;
+  align-items: center;
+  gap: 1.25rem;
+  padding: 1.35rem 0;
+  text-align: left;
+  color: var(--cl-ink);
+  transition: padding 250ms var(--cl-ease);
+}
+
+@media (min-width: 640px) {
+  .cl-road button {
+    grid-template-columns: 3.25rem 1fr 11rem auto;
+  }
+}
+
+.cl-road button:hover {
+  padding-left: 0.5rem;
+}
+
+.cl-road .stone {
+  width: 1.5rem;
+  height: 1.85rem;
+  border-radius: 999px 999px 4px 4px;
+  border: 1.5px solid var(--cl-ink);
+  background: linear-gradient(var(--cl-ink) 0 44%, #fff 44%);
+  transition: background-color 200ms var(--cl-ease);
+}
+
+.cl-road [aria-expanded="true"] .stone {
+  background: linear-gradient(var(--cl-ink) 0 44%, var(--cl-clay) 44%);
+}
+
+.cl-road .chev {
+  transition: transform 250ms var(--cl-ease);
+}
+
+.cl-road [aria-expanded="true"] .chev {
+  transform: rotate(180deg);
+}
+
+.cl-road .body {
+  overflow: hidden;
+  height: 0;
+}
+
+.cl-road .body > div {
+  padding: 0 0 1.75rem 3.75rem;
+}
+
+@media (min-width: 640px) {
+  .cl-road .body > div {
+    padding-left: 4.5rem;
+  }
+}
+
+/* the thread: the only place the orange is allowed in the page itself */
+.cl-thread {
+  height: 1.5px;
+  background: var(--cl-thread);
+  transform-origin: left;
+  transform: scaleX(0);
+  transition: transform 1200ms var(--cl-ease);
+}
+
+.cl-thread[data-drawn="true"] {
+  transform: scaleX(1);
+}
+
+/* register */
+.cl-ledger {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0 0.5rem;
+  font-size: 0.9375rem;
+}
+
+.cl-ledger th {
+  text-align: left;
+  font-weight: 500;
+  padding: 0 1rem 0.25rem;
+}
+
+.cl-ledger td {
+  background: #fff;
+  padding: 0.9rem 1rem;
+  vertical-align: top;
+}
+
+.cl-ledger td:first-child {
+  border-radius: 14px 0 0 14px;
+}
+
+.cl-ledger td:last-child {
+  border-radius: 0 14px 14px 0;
+}
+
+.cl-ledger tbody tr {
+  transition: transform 200ms var(--cl-ease);
+}
+
+.cl-ledger tbody tr:hover {
+  transform: translateX(4px);
+}
+
+.cl-stamp {
+  display: inline-block;
+  padding: 0.25rem 0.6rem;
+  border-radius: 999px;
+  background: var(--cl-stone);
+  font-family: var(--cl-mono), monospace;
+  font-size: 0.6875rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+/* refusals */
+.cl-refusal {
+  display: grid;
+  gap: 0.6rem 3rem;
+  padding-block: 1.6rem;
+  border-top: 1px solid var(--cl-line);
+}
+
+@media (min-width: 768px) {
+  .cl-refusal {
+    grid-template-columns: 5fr 7fr;
+  }
+}
+
+.cl-refusal .title {
+  background-image: linear-gradient(var(--cl-ink), var(--cl-ink));
+  background-repeat: no-repeat;
+  background-position: 0 56%;
+  background-size: 0% 2px;
+  -webkit-box-decoration-break: clone;
+  box-decoration-break: clone;
+  transition: background-size 700ms var(--cl-ease) 200ms;
+}
+
+.cl-refusal[data-struck="true"] .title {
+  background-size: 100% 2px;
+}
+
+/* footer */
+.cl-footer {
+  padding: clamp(0.75rem, 2vw, 1.5rem);
+  padding-top: 0;
+}
+
+.cl-footer .big {
+  font-size: clamp(3.5rem, 15.5vw, 15rem);
+  line-height: 1;
+  padding-bottom: 0.04em;
+  white-space: nowrap;
+  font-variation-settings: "opsz" 96, "wdth" 88;
+}
+
+.cl-footer a {
+  transition: color 150ms var(--cl-ease);
+}
+
+.cl-footer a:hover {
+  color: #fff;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cl-stage {
+    height: auto;
+  }
+
+  .cl-sticky {
+    position: relative;
+  }
+}

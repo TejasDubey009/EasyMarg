@@ -1,0 +1,476 @@
+/*
+  Nightline — reference lock
+  Primary: Origin Financial (midnight canvas, serif display, white pill CTA,
+  depth from glow not shadow). Borrowed: Sandclock's one signal colour for live
+  data only; Mercury's sparse nav. Rejected: violet glows, bordered card grids,
+  photography.
+*/
+
+.nl {
+  --nl-bg: #06080f;
+  --nl-bg-2: #0a0e1c;
+  --nl-panel: #11162b;
+  --nl-line: rgb(242 242 238 / 0.1);
+  --nl-line-2: rgb(242 242 238 / 0.2);
+  --nl-text: #f2f2ee;
+  --nl-text-2: rgb(242 242 238 / 0.66);
+  --nl-text-3: rgb(242 242 238 / 0.42);
+  --nl-signal: #5b8cff;
+  --nl-signal-dim: rgb(91 140 255 / 0.35);
+  --nl-cta: #f2f2ee;
+  --nl-cta-text: #06080f;
+
+  --nl-ease: cubic-bezier(0.2, 0, 0, 1);
+
+  background: var(--nl-bg);
+  color: var(--nl-text);
+  font-family: var(--nl-sans), ui-sans-serif, system-ui, sans-serif;
+  letter-spacing: -0.004em;
+}
+
+.nl ::selection {
+  background: var(--nl-signal);
+  color: var(--nl-bg);
+}
+
+.nl :focus-visible {
+  outline: 2px solid var(--nl-signal);
+  outline-offset: 3px;
+}
+
+/* ─── type ─── */
+.nl .serif {
+  font-family: var(--nl-serif), Georgia, serif;
+  font-weight: 400;
+  letter-spacing: -0.01em;
+}
+
+.nl .mono {
+  font-family: var(--nl-mono), ui-monospace, monospace;
+  font-variant-numeric: tabular-nums;
+}
+
+.nl .label {
+  font-family: var(--nl-mono), ui-monospace, monospace;
+  font-size: 0.6875rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--nl-text-3);
+}
+
+.nl .display {
+  font-size: clamp(3rem, 8.4vw, 7.25rem);
+  line-height: 0.98;
+  text-wrap: balance;
+}
+
+.nl .h2 {
+  font-size: clamp(2.25rem, 4.6vw, 4rem);
+  line-height: 1.02;
+  text-wrap: balance;
+}
+
+.nl .h3 {
+  font-size: clamp(1.5rem, 2.4vw, 2rem);
+  line-height: 1.1;
+}
+
+.nl .lede {
+  font-size: clamp(1.0625rem, 1.4vw, 1.25rem);
+  line-height: 1.55;
+  color: var(--nl-text-2);
+  text-wrap: pretty;
+}
+
+.nl .muted {
+  color: var(--nl-text-2);
+}
+
+.nl .faint {
+  color: var(--nl-text-3);
+}
+
+.nl .signal {
+  color: var(--nl-signal);
+}
+
+/* ─── nav ─── */
+.nl-nav {
+  position: fixed;
+  inset-inline: 0;
+  top: 0;
+  z-index: 40;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1.5rem;
+  height: 4.5rem;
+  padding-inline: clamp(1.25rem, 4vw, 3rem);
+  transition: background-color 400ms var(--nl-ease), border-color 400ms var(--nl-ease);
+  border-bottom: 1px solid transparent;
+}
+
+.nl-nav[data-scrolled="true"] {
+  background: rgb(6 8 15 / 0.72);
+  border-color: var(--nl-line);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+}
+
+.nl-nav a,
+.nl-nav button {
+  color: var(--nl-text-2);
+  font-size: 0.9375rem;
+  transition: color 150ms var(--nl-ease);
+}
+
+.nl-nav a:hover {
+  color: var(--nl-text);
+}
+
+.nl-nav .nl-btn,
+.nl-nav .nl-btn:hover {
+  color: var(--nl-cta-text);
+}
+
+/* ─── buttons ─── */
+.nl-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  height: 3rem;
+  padding-inline: 1.5rem;
+  border-radius: 999px;
+  background: var(--nl-cta);
+  color: var(--nl-cta-text);
+  font-weight: 500;
+  font-size: 0.9375rem;
+  white-space: nowrap;
+  transition: transform 150ms var(--nl-ease), background-color 150ms var(--nl-ease);
+}
+
+.nl-btn:hover {
+  background: #fff;
+}
+
+.nl-btn:active {
+  transform: scale(0.97);
+}
+
+.nl-btn .arrow {
+  transition: transform 200ms var(--nl-ease);
+}
+
+.nl-btn:hover .arrow {
+  transform: translateX(3px);
+}
+
+.nl-btn--ghost {
+  background: transparent;
+  color: var(--nl-text);
+  border: 1px solid var(--nl-line-2);
+}
+
+.nl-btn--ghost:hover {
+  background: rgb(242 242 238 / 0.06);
+  border-color: rgb(242 242 238 / 0.4);
+}
+
+.nl-btn--sm {
+  height: 2.5rem;
+  padding-inline: 1.1rem;
+  font-size: 0.875rem;
+}
+
+/* ─── the stage: scene + scroll story ─── */
+.nl-stage {
+  position: relative;
+  height: 760vh;
+}
+
+.nl-sticky {
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  height: 100dvh;
+  overflow: hidden;
+}
+
+.nl-sticky > canvas,
+.nl-sticky .nl-canvas {
+  position: absolute;
+  inset: 0;
+}
+
+.nl-vignette {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(120% 80% at 50% 110%, rgb(6 8 15 / 0.9), transparent 60%),
+    linear-gradient(to bottom, rgb(6 8 15 / 0.55), transparent 28%, transparent 70%, rgb(6 8 15 / 0.85));
+}
+
+.nl-hero {
+  position: absolute;
+  inset-inline: 0;
+  bottom: clamp(3rem, 9vh, 6rem);
+  will-change: transform, opacity;
+}
+
+.nl-caption {
+  position: absolute;
+  left: clamp(1.25rem, 4vw, 3rem);
+  bottom: clamp(3.5rem, 10vh, 7rem);
+  max-width: 34rem;
+  opacity: 0;
+  visibility: hidden;
+}
+
+.nl-caption .n {
+  font-family: var(--nl-serif), Georgia, serif;
+  font-size: clamp(5rem, 12vw, 9rem);
+  line-height: 0.8;
+  color: var(--nl-signal);
+}
+
+.nl-progress {
+  position: absolute;
+  right: clamp(1.25rem, 4vw, 3rem);
+  bottom: clamp(3.5rem, 10vh, 7rem);
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  align-items: flex-end;
+}
+
+@media (max-width: 767px) {
+  .nl-progress {
+    display: none;
+  }
+}
+
+.nl-progress .bar {
+  width: 1.5px;
+  height: 9rem;
+  background: var(--nl-line-2);
+  position: relative;
+  overflow: hidden;
+}
+
+.nl-progress .bar i {
+  position: absolute;
+  inset-inline: 0;
+  top: 0;
+  height: 100%;
+  background: var(--nl-signal);
+  transform-origin: top;
+  transform: scaleY(0);
+}
+
+/* ─── sections ─── */
+.nl-section {
+  padding-block: clamp(5rem, 10vw, 9rem);
+  border-top: 1px solid var(--nl-line);
+}
+
+.nl-section--panel {
+  background: var(--nl-bg-2);
+}
+
+.nl-row {
+  display: grid;
+  gap: 1.5rem 3rem;
+  padding-block: 2.25rem;
+  border-top: 1px solid var(--nl-line);
+  transition: padding 300ms var(--nl-ease);
+}
+
+.nl-row:last-child {
+  border-bottom: 1px solid var(--nl-line);
+}
+
+@media (min-width: 768px) {
+  .nl-row {
+    grid-template-columns: 2fr 5fr 4fr auto;
+    align-items: start;
+  }
+}
+
+.nl-row .go {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.75rem;
+  height: 2.75rem;
+  border-radius: 999px;
+  border: 1px solid var(--nl-line-2);
+  color: var(--nl-text);
+  transition: background-color 200ms var(--nl-ease), color 200ms var(--nl-ease), border-color 200ms var(--nl-ease), transform 200ms var(--nl-ease);
+}
+
+.nl-row:hover .go {
+  background: var(--nl-cta);
+  color: var(--nl-cta-text);
+  border-color: var(--nl-cta);
+}
+
+.nl-row:hover .go svg {
+  transform: translateX(2px);
+}
+
+.nl-row .title {
+  transition: color 200ms var(--nl-ease);
+}
+
+.nl-row:hover .title {
+  color: #fff;
+}
+
+/* a quiet glow that follows the pointer across a panel */
+.nl-glow {
+  position: relative;
+  overflow: hidden;
+  border: 1px solid var(--nl-line);
+  border-radius: 16px;
+  background: var(--nl-panel);
+}
+
+.nl-glow::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 400ms var(--nl-ease);
+  background: radial-gradient(420px circle at var(--mx, 50%) var(--my, 50%), rgb(91 140 255 / 0.16), transparent 60%);
+}
+
+.nl-glow:hover::before {
+  opacity: 1;
+}
+
+/* ledger table */
+.nl-ledger {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.9375rem;
+}
+
+.nl-ledger th {
+  text-align: left;
+  font-weight: 400;
+  padding: 0.75rem 0;
+  border-bottom: 1px solid var(--nl-line-2);
+}
+
+.nl-ledger td {
+  padding: 0.95rem 0;
+  border-bottom: 1px solid var(--nl-line);
+  vertical-align: top;
+}
+
+.nl-ledger tr {
+  transition: background-color 150ms var(--nl-ease);
+}
+
+.nl-ledger tbody tr:hover {
+  background: rgb(242 242 238 / 0.03);
+}
+
+.nl-stamp {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.2rem 0.55rem;
+  border-radius: 999px;
+  border: 1px solid var(--nl-line-2);
+  font-family: var(--nl-mono), monospace;
+  font-size: 0.6875rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.nl-stamp i {
+  width: 6px;
+  height: 6px;
+  border-radius: 999px;
+  background: var(--nl-signal);
+  box-shadow: 0 0 10px var(--nl-signal);
+}
+
+/* refusals: each line draws a strike as it is read */
+.nl-refusal {
+  display: grid;
+  gap: 0.75rem 3rem;
+  padding-block: 1.75rem;
+  border-top: 1px solid var(--nl-line);
+}
+
+@media (min-width: 768px) {
+  .nl-refusal {
+    grid-template-columns: 5fr 7fr;
+  }
+}
+
+.nl-refusal .title {
+  background-image: linear-gradient(var(--nl-text), var(--nl-text));
+  background-repeat: no-repeat;
+  background-position: 0 56%;
+  background-size: 0% 1.5px;
+  -webkit-box-decoration-break: clone;
+  box-decoration-break: clone;
+  transition: background-size 700ms var(--nl-ease) 200ms;
+}
+
+.nl-refusal[data-struck="true"] .title {
+  background-size: 100% 1.5px;
+}
+
+/* footer */
+.nl-footer {
+  border-top: 1px solid var(--nl-line);
+  padding-block: 4rem 2.5rem;
+}
+
+.nl-footer a {
+  transition: color 150ms var(--nl-ease);
+}
+
+.nl-footer a:hover {
+  color: var(--nl-text);
+}
+
+.nl-footer .big {
+  font-family: var(--nl-serif), Georgia, serif;
+  font-size: clamp(2.5rem, 7vw, 6rem);
+  line-height: 1;
+}
+
+.nl-footer .big a {
+  color: var(--nl-text);
+  text-decoration-line: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.12em;
+  text-decoration-color: var(--nl-line-2);
+  transition: text-decoration-color 250ms var(--nl-ease);
+}
+
+.nl-footer .big a:hover {
+  text-decoration-color: var(--nl-signal);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .nl-stage {
+    height: auto;
+  }
+
+  .nl-sticky {
+    position: relative;
+  }
+
+  .nl-caption,
+  .nl-progress {
+    display: none;
+  }
+}

@@ -1,0 +1,361 @@
+@import "tailwindcss";
+
+/*
+  EasyMarg — ink and paper.
+  One brand ink on white paper. Hairline rules instead of boxes.
+  Colour roles are fixed:
+    blue   → the brand block, the primary action, your current position on the road
+    ok     → a paper that has been checked, a milestone that has been passed
+    wait   → a paper or file that is with someone else
+    stop   → something only you can fix
+  Mono type is for data only: file numbers, amounts, dates, codes.
+*/
+
+@theme {
+  --color-*: initial;
+  --color-white: #ffffff;
+
+  --color-ink: #14171f;
+  --color-ink-2: #4a4f5b;
+  --color-ink-3: #767b87;
+  --color-rule: #e4e3de;
+  --color-rule-2: #c8c7c1;
+  --color-paper: #f6f5f1;
+
+  --color-blue: #153a9c;
+  --color-blue-deep: #0e2a75;
+  --color-blue-wash: #edf1fb;
+  --color-blue-tint: #b9c8f2;
+
+  --color-ok: #17734a;
+  --color-ok-wash: #e8f4ed;
+  --color-wait: #8a5a00;
+  --color-wait-wash: #fbf2dc;
+  --color-stop: #b42318;
+  --color-stop-wash: #fcecea;
+
+  --font-sans: var(--ff-archivo), ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-mono: var(--ff-mono), ui-monospace, "SF Mono", Menlo, monospace;
+  --font-deva: var(--ff-deva), "Kohinoor Devanagari", "Noto Sans Devanagari", sans-serif;
+
+  --radius-xs: 2px;
+  --radius-sm: 4px;
+  --radius-md: 6px;
+
+  /* Motion: quick for feedback, slower for things arriving on the page. */
+  --ease-out: cubic-bezier(0, 0, 0.2, 1);
+  --ease-in-out: cubic-bezier(0.4, 0, 0.2, 1);
+  --ease-arrive: cubic-bezier(0.05, 0.7, 0.1, 1);
+}
+
+@layer base {
+  html {
+    -webkit-text-size-adjust: 100%;
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  body {
+    background: var(--color-white);
+    color: var(--color-ink);
+    font-family: var(--font-sans);
+    font-size: 1rem;
+    line-height: 1.5;
+    letter-spacing: -0.006em;
+  }
+
+  ::selection {
+    background: var(--color-blue);
+    color: var(--color-white);
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--color-blue);
+    outline-offset: 2px;
+  }
+
+  .on-blue :focus-visible {
+    outline-color: var(--color-white);
+  }
+
+  a,
+  button,
+  label,
+  summary {
+    touch-action: manipulation;
+    -webkit-tap-highlight-color: rgb(21 58 156 / 0.12);
+  }
+
+  [id] {
+    scroll-margin-top: 6rem;
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    html {
+      scroll-behavior: smooth;
+    }
+  }
+
+  input[type="number"]::-webkit-inner-spin-button,
+  input[type="number"]::-webkit-outer-spin-button {
+    appearance: none;
+  }
+}
+
+/* Page gutter and measure */
+@utility wrap {
+  width: 100%;
+  max-width: 1200px;
+  margin-inline: auto;
+  padding-inline: clamp(1.25rem, 4vw, 2rem);
+}
+
+/* Display type uses the wide cut of Archivo; text uses the normal cut. */
+@utility t-display {
+  font-stretch: 116%;
+  font-weight: 560;
+  font-size: clamp(2.25rem, 5.6vw, 4.25rem);
+  line-height: 1.02;
+  letter-spacing: -0.026em;
+  text-wrap: balance;
+}
+
+@utility t-h1 {
+  font-stretch: 114%;
+  font-weight: 560;
+  font-size: clamp(2rem, 4.4vw, 3.25rem);
+  line-height: 1.05;
+  letter-spacing: -0.024em;
+  text-wrap: balance;
+}
+
+@utility t-h2 {
+  font-stretch: 112%;
+  font-weight: 560;
+  font-size: clamp(1.625rem, 3vw, 2.25rem);
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+  text-wrap: balance;
+}
+
+@utility t-h3 {
+  font-stretch: 108%;
+  font-weight: 600;
+  font-size: 1.1875rem;
+  line-height: 1.3;
+  letter-spacing: -0.012em;
+}
+
+@utility t-lede {
+  font-size: clamp(1.0625rem, 1.4vw, 1.1875rem);
+  line-height: 1.55;
+  text-wrap: pretty;
+}
+
+@utility t-label {
+  font-family: var(--font-mono);
+  font-size: 0.6875rem;
+  line-height: 1.45;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+@utility t-data {
+  font-family: var(--font-mono);
+  font-size: 0.8125rem;
+  line-height: 1.45;
+  letter-spacing: 0;
+  font-variant-numeric: tabular-nums;
+}
+
+/* The road ahead is a dashed centre line; the road behind is solid. */
+@utility road-ahead-x {
+  background-image: linear-gradient(to right, var(--color-rule-2) 55%, transparent 0);
+  background-size: 10px 1.5px;
+  background-repeat: repeat-x;
+  background-position: left center;
+}
+
+@utility road-ahead-y {
+  background-image: linear-gradient(to bottom, var(--color-rule-2) 55%, transparent 0);
+  background-size: 1.5px 10px;
+  background-repeat: repeat-y;
+  background-position: center top;
+}
+
+/* The score ruler: the input has no track of its own, only a marker that rides over the bands. */
+.score-range {
+  appearance: none;
+  background: transparent;
+  cursor: ew-resize;
+  margin: 0;
+}
+
+.score-range::-webkit-slider-runnable-track {
+  height: 100%;
+  background: transparent;
+}
+
+.score-range::-moz-range-track {
+  height: 100%;
+  background: transparent;
+}
+
+.score-range::-webkit-slider-thumb {
+  appearance: none;
+  width: 14px;
+  height: 36px;
+  margin-top: 4px;
+  border-radius: 7px 7px 2px 2px;
+  border: 2px solid var(--color-white);
+  background: var(--color-ink);
+  box-shadow: 0 0 0 1.5px var(--color-ink);
+}
+
+.score-range::-moz-range-thumb {
+  width: 10px;
+  height: 32px;
+  border-radius: 7px 7px 2px 2px;
+  border: 2px solid var(--color-white);
+  background: var(--color-ink);
+  box-shadow: 0 0 0 1.5px var(--color-ink);
+}
+
+.score-range:focus-visible {
+  outline: none;
+}
+
+.score-range:focus-visible::-webkit-slider-thumb {
+  box-shadow: 0 0 0 1.5px var(--color-ink), 0 0 0 5px rgb(21 58 156 / 0.3);
+}
+
+.score-range:focus-visible::-moz-range-thumb {
+  box-shadow: 0 0 0 1.5px var(--color-ink), 0 0 0 5px rgb(21 58 156 / 0.3);
+}
+
+
+/*
+  Arriving on the page. Content is visible by default; the script hides only
+  what is still below the fold, then lets it rise into place once as it enters.
+*/
+[data-reveal] {
+  transition:
+    opacity 600ms var(--ease-arrive) var(--reveal-delay, 0ms),
+    transform 600ms var(--ease-arrive) var(--reveal-delay, 0ms);
+}
+
+[data-reveal="out"] {
+  opacity: 0;
+  transform: translateY(16px);
+}
+
+/* A thing we will not do is struck out, the way it would be on paper. */
+.strike {
+  background-image: linear-gradient(var(--color-ink), var(--color-ink));
+  background-repeat: no-repeat;
+  background-position: 0 56%;
+  background-size: 100% 1.5px;
+  -webkit-box-decoration-break: clone;
+  box-decoration-break: clone;
+}
+
+[data-reveal="out"] .strike {
+  background-size: 0% 1.5px;
+}
+
+[data-reveal="in"] .strike {
+  transition: background-size 700ms var(--ease-in-out) calc(var(--reveal-delay, 0ms) + 250ms);
+}
+
+/* A bar that fills to its value when it comes into view. */
+.fill-bar {
+  transform-origin: left center;
+  transform: scaleX(var(--fill, 0));
+}
+
+[data-reveal="out"] .fill-bar {
+  transform: scaleX(0);
+}
+
+[data-reveal="in"] .fill-bar {
+  transition: transform 900ms var(--ease-arrive) calc(var(--reveal-delay, 0ms) + 200ms);
+}
+
+/* The matter of a panel changing: the new matter settles in. */
+@keyframes settle {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+}
+
+.settle {
+  animation: settle 260ms var(--ease-out) both;
+}
+
+/* A year scrubber: a thin rule with a marker riding on it. */
+.line-range {
+  appearance: none;
+  height: 2.75rem;
+  background: transparent;
+  cursor: ew-resize;
+  margin: 0;
+}
+
+.line-range::-webkit-slider-runnable-track {
+  height: 1.5px;
+  background: var(--color-ink);
+}
+
+.line-range::-moz-range-track {
+  height: 1.5px;
+  background: var(--color-ink);
+}
+
+.line-range::-webkit-slider-thumb {
+  appearance: none;
+  width: 16px;
+  height: 22px;
+  margin-top: -11px;
+  border-radius: 8px 8px 2px 2px;
+  border: 2px solid var(--color-paper);
+  background: var(--color-blue);
+  box-shadow: 0 0 0 1.5px var(--color-blue);
+}
+
+.line-range::-moz-range-thumb {
+  width: 12px;
+  height: 18px;
+  border-radius: 8px 8px 2px 2px;
+  border: 2px solid var(--color-paper);
+  background: var(--color-blue);
+  box-shadow: 0 0 0 1.5px var(--color-blue);
+}
+
+.line-range:focus-visible {
+  outline: none;
+}
+
+.line-range:focus-visible::-webkit-slider-thumb {
+  box-shadow: 0 0 0 1.5px var(--color-blue), 0 0 0 5px rgb(21 58 156 / 0.3);
+}
+
+.line-range:focus-visible::-moz-range-thumb {
+  box-shadow: 0 0 0 1.5px var(--color-blue), 0 0 0 5px rgb(21 58 156 / 0.3);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    transition-delay: 0ms !important;
+  }
+
+  [data-reveal="out"] {
+    opacity: 1;
+    transform: none;
+  }
+}
